@@ -267,6 +267,7 @@ if(file.exists(paste0("H:/My Drive/R_playground/", format(mdy(date), "%m"), "-",
 }
 
 
+
 gtsave(value_table_nf_gt, expand = 100,
        filename = trimws(paste0(time_save_text, ".png")),
        path = file.path(paste0("H:/My Drive/R_playground/", format(mdy(date), "%m"), "-", format(mdy(date), "%Y"), "/")),
@@ -274,7 +275,7 @@ gtsave(value_table_nf_gt, expand = 100,
 
 gtsave(value_table_nf_gt,
        filename = "mlbvalues.html",
-       path = file.path("C:/Users/Bobby (Villanova)/OneDrive/Twitter/")
+       path = file.path("H:/My Drive/R_playground/")
        )
 
 gtsave(value_table_nf_gt, expand = 100,
@@ -282,10 +283,15 @@ gtsave(value_table_nf_gt, expand = 100,
        path = file.path(paste0("H:/My Drive/R_playground/")),
        vheight = 100, vwidth= 1000)
 
+gtsave(value_table_nf_gt, expand = 100,
+       filename = trimws(paste0(time_save_text, ".png")),
+       path = file.path(paste0("H:/My Drive/R_playground/mlbvalues/daily_plays/")),
+       vheight = 100, vwidth =1000)
 
-
-png <- readPNG("H:/My Drive/R_playground/mlbvalues.png")
-
+gtsave(value_table_nf_gt, expand = 100,
+       filename = "todays_plays.png",
+       path = file.path(paste0("H:/My Drive/R_playground/mlbvalues/")),
+       vheight = 100, vwidth =1000)
 
 #library(rvest)
 #library(RSelenium)
@@ -320,6 +326,8 @@ library(rtoot)
 
 #token <- readRDS(file.path(tools::R_user_dir("rtoot", "config"), "account1.rds"))
 
-post_toot(status = paste0("Values for ", format(mdy(date), "%b %d")), media="H:/My Drive/R_playground/mlbvalues.png",
+post_toot(status = paste0("Values for ", format(mdy(date), "%b %d")), media="H:/My Drive/R_playground/mlbvalues/todays_plays.png",
           alt_text = "description of media")
 
+post_toot(status = paste0("Values for ", format(mdy(date), "%b %d")), media="H:/My Drive/R_playground/mlbvalues.html",
+          alt_text = "description of media")
