@@ -13,6 +13,11 @@ jobs:
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           packages: |
+            any::rvest
+            any::dplyr
+            any::xml2
+            any::tidyr
+            any::tidyverse
             any::stringr
             any::gt
             any::readr
