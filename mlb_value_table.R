@@ -157,4 +157,107 @@ value_table_nf <- value_table %>%
 
 value_table_nf_gt <- value_table_nf %>%
   select(-c(Wins_Hits, K_HR, HR_nf, Hits_nf, K_nf)) %>%
-  write_rds("mlbvaluedata.rds")
+  gt(rowname_col = "Player") %>%
+  tab_row_group(label = "Hits",
+                rows = (bet_type == "hits")) %>%
+  tab_row_group(label = "Total Bases",
+                rows = (bet_type == "total_bases")) %>%
+  tab_row_group(label = "Home Runs",
+                rows = (bet_type == "home_runs")) %>%
+  tab_row_group(label = "Pitcher Ks",
+                rows = (bet_type == "pitcher_ks")) %>%
+  #  tab_row_group(label = "Player",
+  #                rows = Player) %>%
+  tab_spanner(label = "Draftkings",
+              columns = c(DK, DK_value, DK_value_flag)) %>%
+  tab_spanner(label = "FanDuel",
+              columns = c(FD, FD_value, FD_value_flag)) %>%
+  tab_spanner(label = "Barstool",
+              columns = c(BS, BS_value, BS_value_flag)) %>%
+  tab_spanner(label = "numberFire",
+              columns = c(nf_proj, nf_proj_diff)) %>%
+  cols_label(BP_prob = "BP Prob",
+             FD = "Odds",
+             FD_value = "Value",
+             DK = "Odds",
+             DK_value = "Value",
+             BS = "Odds",
+             BS_value = "Value",
+             nf_proj = "Projection",
+             nf_proj_diff = "Comparison") %>%
+  cols_hide(columns = bet_type) %>%
+  sub_values(values = 0, replacement = "-") %>%
+  sub_missing(missing_text = "-") %>%
+  fmt_percent(columns = BP_prob, decimals = 0) %>%
+  fmt_percent(columns = c(DK_value, FD_value, BS_value, nf_proj_diff),
+              force_sign = TRUE,
+              decimals = 0) %>%
+  fmt_number(columns = c(DK, FD, BS),
+             force_sign = TRUE,
+             dec_mark = FALSE, sep_mark = "",
+             decimals = 0) %>%
+  data_color(columns = DK_value,
+             rows = (DK_value_flag == 1),
+             palette = c("white", "green")) %>%
+  data_color(columns = FD_value,
+             rows = (FD_value_flag == 1),
+             palette = c("white", "green")) %>%
+  #data_color(columns = BS_value,
+  #           rows = (BS_value_flag == 1),
+  #           palette = c("white", "green")) %>%
+  data_color(columns = BP_prob,
+             palette = c("red", "green"),
+             alpha = .5) %>%
+  cols_hide(columns = c(DK_value_flag, FD_value_flag, BS_value_flag)) %>%
+  tab_style(style = cell_text(weight = "bold"),
+            locations = list(cells_row_groups(),
+                             cells_column_spanners())) %>%
+  tab_header(title = md(paste0("Ballpark Pal MLB Values for " ,
+                               #format(date, "%b %d"))),
+                               date)),
+             subtitle = time) %>%
+  tab_style(style = cell_borders(sides = "left", weight = px(1)),
+            locations = cells_body(columns = c(9, 12))) %>%
+  cols_align(align = "center", columns = c(Tm, Opp, Bet, BP_prob, nf_proj, nf_proj_diff)) %>%
+  #  data_color(columns = nf_proj_diff,
+  #             rows = (bet_type == "hits"),
+  #             target_columns = nf_proj,
+  #             palette = c("red", "green")) %>%
+  tab_style(style = cell_fill(color = "red", alpha = 1),
+            locations = cells_body(
+              rows = nf_proj_diff > -999999,
+              columns = nf_proj)) %>%
+  tab_style(style = cell_fill(color = "red", alpha = .5),
+            locations = cells_body(
+              rows = nf_proj_diff > -.2,
+              columns = nf_proj)) %>%
+  tab_style(style = cell_fill(color = "red", alpha = .2),
+            locations = cells_body(
+              rows = nf_proj_diff > -.1,
+              columns = nf_proj)) %>%
+  tab_style(style = cell_fill(color = "white", alpha = 1),
+            locations = cells_body(
+              rows = nf_proj_diff > -.05,
+              columns = nf_proj)) %>%
+  tab_style(style = cell_fill(color = "green", alpha = .2),
+            locations = cells_body(
+              rows = nf_proj_diff > .05,
+              columns = nf_proj)) %>%
+  tab_style(style = cell_fill(color = "green", alpha = .5),
+            locations = cells_body(
+              rows = nf_proj_diff > .1,
+              columns = nf_proj)) %>%
+  tab_style(style = cell_fill(color = "green", alpha = 1),
+            locations = cells_body(
+              rows = nf_proj_diff > .2,
+              columns = nf_proj)) %>%
+  tab_source_note(source_note = "Data obtained from ballparkpal.com and numberfire.com") %>%
+  cols_hide(columns = c(bet_number))
+
+date_save_text <- format(mdy(date), "%Y-%m-%d")
+time_save_text <- paste0(format(mdy(date), "%d"), "-", str_replace(str_sub(time, start = 15), ":", ""))
+
+gtsave(value_table_nf_gt, expand = 100,
+       filename = "todays_plays.png",
+       #path = file.path(paste0("H:/My Drive/R_playground/mlbvalues/")),
+       vheight = 100, vwidth =1000)
