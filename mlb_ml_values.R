@@ -6,6 +6,7 @@ library(dplyr)
 library(gt)
 library(png)
 library(webshot2)
+library(lubridate)
 
 api <- "d72d888a7e2831439aa64a8ac1525f71"
 base <- "https://api.the-odds-api.com"
