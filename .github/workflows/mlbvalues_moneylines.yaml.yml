@@ -34,6 +34,7 @@ jobs:
             any::lubridate
             any::webshot2
             any::png
+            any::stringr
 
 
       - name: Check out repository
