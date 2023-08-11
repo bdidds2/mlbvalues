@@ -111,24 +111,31 @@ for (i in seq_along(filtered_game_hrefs)){
   #home_score
   home_total_xpath <- "/html/body/div/div[3]/div/div[3]/p"
   home_total <- as.numeric(xml_text(xml_find_all(read_html(url), home_total_xpath)))
+  home_total <- ifelse(length(home_total) == 0, NA, home_total)
+
 
   #away_score
   away_total_xpath <- "/html/body/div/div[3]/div/div[1]/p"
   away_total <- as.numeric(xml_text(xml_find_all(read_html(url), away_total_xpath)))
+  away_total <- ifelse(length(away_total) == 0, NA, away_total)
 
   #home_prob
   home_prob_xpath <- "/html/body/div/div[4]/div/div[3]/p"
   home_prob <- as.numeric(gsub("([0-9.]+)%.*", "\\1", xml_text(xml_find_all(read_html(url), home_prob_xpath))))/100
+  home_prob <- ifelse(length(home_prob) == 0, NA, home_prob)
 
   #away_prob
   away_prob_xpath <- "/html/body/div/div[4]/div/div[1]/p"
   away_prob <- as.numeric(gsub(".*\\s([0-9.]+)%.*", "\\1", xml_text(xml_find_all(read_html(url), away_prob_xpath))))/100
+  away_prob <- ifelse(length(away_prob) == 0, NA, away_prob)
 
   #runs first inning
   yrfi_xpath <- "/html/body/div/div[11]/div[3]/p/text()[1]"
   yrfi_prob <- as.numeric(gsub("([0-9.]+)%.*", "\\1", xml_text(xml_find_all(read_html(url), yrfi_xpath))))/100
   nrfi_xpath <- "/html/body/div/div[11]/div[3]/p/text()[2]"
   nrfi_prob <- as.numeric(gsub("([0-9.]+)%.*", "\\1", xml_text(xml_find_all(read_html(url), nrfi_xpath))))/100
+  yrfi_prob <- ifelse(length(yrfi_prob) == 0, NA, yrfi_prob)
+  nrfi_prob <- ifelse(length(nrfi_prob) == 0, NA, nrfi_prob)
 
   new_row <- data.frame(
     home_team = home_team,
@@ -284,4 +291,3 @@ gtsave(final_df, expand = 100,
        filename = "ML_plays.png",
        #path = file.path(paste0("H:/My Drive/R_playground/mlbvalues/")),
        vheight = 100, vwidth =1000)
-
