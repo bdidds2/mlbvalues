@@ -17,6 +17,8 @@ endpoint <- paste0("/v4/sports/", sport, "/odds/?apiKey=", api, "&regions=us&mar
 
 url <- paste0(base, endpoint)
 
+today <- Sys.Date()
+time <- Sys.time()
 
 # Make the GET request
 response <- GET(url)
@@ -25,7 +27,9 @@ response <- GET(url)
 content <- fromJSON(content(response, "text")) %>%
   unnest(., cols = c(bookmakers)) %>%
   unnest(., cols = c(markets), names_sep = "_") %>%
-  unnest(., cols = c(markets_outcomes), names_sep = "_")
+  unnest(., cols = c(markets_outcomes), names_sep = "_") %>%
+  mutate(commence_time = ymd_hms(commence_time)) %>%
+  filter(commence_time < today+1, commence_time >= time)
 
 american_to_probability <- function(american_odds) {
   ifelse(is.na(american_odds), NA,
@@ -189,7 +193,7 @@ team_names_with_city <- c(
 )
 
 team_names_without_city <- c(
-  "Diamondbacks",
+  "Dbacks",
   "Braves",
   "Orioles",
   "Red Sox",
