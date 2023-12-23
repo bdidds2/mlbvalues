@@ -1,14 +1,14 @@
 on:
-  schedule:
-    - cron: '0 10 * * *'
-    - cron: '0 14 * * *'
-    - cron: '55 15 * * *'
-    - cron: '55 14 * * *'
-    - cron: '0 16 * * *'
-    - cron: '0 17 * * *'
-    - cron: '0 18 * * *'
-    - cron: '0 19 * * *'
-    - cron: '0 20 * * *'
+#  schedule:
+ #   - cron: '0 10 * * *'
+ #   - cron: '0 14 * * *'
+ #   - cron: '55 15 * * *'
+ #   - cron: '55 14 * * *'
+ #   - cron: '0 16 * * *'
+ #   - cron: '0 17 * * *'
+ #   - cron: '0 18 * * *'
+ #   - cron: '0 19 * * *'
+ #   - cron: '0 20 * * *'
 
 jobs:
   import-data:
